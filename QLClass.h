@@ -19,6 +19,7 @@
 #include<utility>
 #include<Randomer.h>
 #include<DataBase.h>
+#include<queue>
 #include"../../NearestNeighbor/LSH/LSH/LSH.h"
 #include<sparsehash/dense_hash_map>
 using namespace std;
@@ -41,14 +42,6 @@ public:
 		}
 	};
 
-	struct MyHash
-	{
-		size_t operator()(const SA &sa)const
-		{
-			return 0;
-		}
-	};
-
 	using QTable = google::dense_hash_map<SA, Q,hash<SA>, eqstr>;
 
 	using SAQ = pair<SA, double>;
@@ -65,7 +58,7 @@ public:
 	using FuncWrite = function<void(const QTable&,vector<vector<wstring>>*)>;
 #endif // !UNICODE
 	
-
+	
 
 protected:
 	QTable q_table;
@@ -90,33 +83,76 @@ protected:
 		auto pos_a = As(s);
 
 		shuffle(begin(pos_a), end(pos_a), this->mt);
-		return pos_a.front();
+	
+		auto ret=pos_a.front();
+		auto _size = size(pos_a);
+		return ret;
 	}
 
+	void Pruning()
+	{
+		vector<SAQ> data_list(begin(this->q_table),end(this->q_table));
+
+		auto func = [](const double &left, const SAQ &right)
+		{
+			auto ret = left + abs(right.second);
+			return ret;
+		};
+
+		auto abs_sum = accumulate(begin(this->q_table), end(this->q_table), 0., func);
+
+		if (abs_sum == 0.)
+		{
+			return;
+		}
+
+		auto threshold = 0.1;
+
+		//priority_queue<SAQ> que(begin(data_list), end(data_list));
+		priority_queue<SAQ> que(begin(this->q_table), end(this->q_table));
+
+		this->q_table.clear();
+		//this->q_table.set_empty_key(SA());
+
+		while (!que.empty())
+		{
+			auto item = que.top();
+			auto rate = abs(item.second) / abs_sum;
+
+			if (rate < threshold)
+			{
+				return;
+			}
+
+			this->q_table.insert(item);
+			que.pop();
+		}
+	}
 
 public:
 	QLClass()
-		:QLClass(0.7, 0.9, 0.4)
+		:QLClass(0.7, 0.9, 1.)
 	{}
 
 	QLClass(const double &lr, const double &r, const double &e)
 		:learn_rate(lr), r(r), e(e) 
 	{
-		this->q_table.set_empty_key(SA());
+		this->q_table.set_empty_key(SA((S)nan,(A)nan));
 	}
 
 	~QLClass() {}
 
 	virtual void QUpDate(const S &s, const A &a)
 	{
-		auto s2 = this->T(s, a);
-		auto a2 = BestAction(s2);
-		auto r = this->R(s2);
-		double maxE = q_table[make_pair(s2, a2)];
+		auto s2 = this->T(s, a); 
+		auto a2 = BestAction(s2); 
+		auto r = this->R(s2); 
+		double maxE = q_table[make_pair(s2, a2)]; 
 
-		auto &q = this->q_table[make_pair(s, a)];
+		auto &q = this->q_table[make_pair(s, a)]; 
 		
-		q = (1 - learn_rate)*q + this->learn_rate*( r + this->r*maxE);
+		q = (1 - learn_rate)*q + this->learn_rate*( r + this->r*maxE); 
+		this->Pruning();
 	}
 	
 	A Learn(const S &s)
@@ -142,17 +178,17 @@ public:
 	{
 		auto pos_a = As(s);
 
-		A best_a = pos_a.front();
-		auto maxQ = this->q_table[make_pair(s, best_a)];
+		A best_a = pos_a.front(); 
+		auto maxQ = this->q_table[make_pair(s, best_a)]; 
 
 		vector<SA> sas;
 		sas.reserve(size(pos_a));
-
+	
 		for (auto &a : pos_a)
 		{
 			sas.push_back(make_pair(s, a));
 		}
-
+		
 		for (auto &sa : sas)
 		{
 			auto q = this->q_table[sa];
@@ -162,7 +198,7 @@ public:
 				maxQ = q;
 			}
 		}
-
+		
 		return best_a;
 	}
 
@@ -266,3 +302,11 @@ public:
 		}
 	};
 
+	template<typename S, typename A>
+	struct std::less<std::pair<std::pair<S, A>,double>>
+	{
+		bool operator()(const std::pair<std::pair<S,A>,double> &x, const std::pair<std::pair<S, A>, double> &y) const
+		{
+			return x.second < y.second;
+		}
+	};

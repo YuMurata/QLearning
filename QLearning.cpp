@@ -89,10 +89,8 @@ int main()
 		return ret;
 	};
 
-	QL::FuncWrite write = [](const QL::QTable &saq)
+	QL::FuncWrite write = [](const QL::QTable &saq,vector<vector<string>> *str)
 	{
-		vector<vector<string>> ret;
-		return ret;
 	};
 
 
