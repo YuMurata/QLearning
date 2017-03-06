@@ -7,6 +7,21 @@
 
 int main()
 {
+	google::dense_hash_map<int, double> x; x.set_empty_key(-1);
+
+	auto aho = x.max_bucket_count();
+	auto ahoa = x.max_size();
+	auto ahob = x.size();
+
+	x[1] = 1;
+	x[2] = 2;
+	x[3] = 3;
+
+	aho = x.max_bucket_count();
+	 ahoa = x.max_size();
+	 ahob = x.size();
+	 auto fg = sizeof(pair<int, double>);
+	 auto sedx = ahob*fg;
 	using S = int;
 	using A = int;
 	using QL = QLClass<S, A>;
@@ -24,9 +39,9 @@ int main()
 
 	const vector<S> s_list =
 	{
-		0,1,2,
+		  0,1,2,
 		3,4,5,6,7,
-		8,9,10,
+		  8,9,10,
 	};
 
 	const vector<A> a_list =

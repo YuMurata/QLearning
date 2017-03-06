@@ -91,42 +91,54 @@ protected:
 
 	void Pruning()
 	{
+		auto _size = size(this->q_table);
+		auto _sizeof=sizeof(SA);
+		auto mem_size = _size*_sizeof;
+		if ( mem_size< 50e3)
+		{
+			return;
+		}
 		vector<SAQ> data_list(begin(this->q_table),end(this->q_table));
 
-		auto func = [](const double &left, const SAQ &right)
+		auto sum_func = [](const double &left, const SAQ &right)
 		{
 			auto ret = left + abs(right.second);
 			return ret;
 		};
 
-		auto abs_sum = accumulate(begin(this->q_table), end(this->q_table), 0., func);
+		auto abs_sum = accumulate(begin(data_list), end(data_list), 0., sum_func);
 
 		if (abs_sum == 0.)
 		{
 			return;
 		}
 
-		auto threshold = 0.1;
+		auto threshold = 0.01;
+		auto pred = [](const SAQ &x, const SAQ &y)
+		{
+			return x.second < y.second;
+		};
+		sort(begin(data_list), end(data_list),pred);
 
-		//priority_queue<SAQ> que(begin(data_list), end(data_list));
-		priority_queue<SAQ> que(begin(this->q_table), end(this->q_table));
+		auto find_func = [&abs_sum, &threshold](const SAQ &x)
+		{
+			return abs(x.second) / abs_sum > threshold;
+		};
+		auto itr = find_if(begin(data_list), end(data_list), find_func);
+
+		auto dist = distance(begin(data_list), itr);
+		if (dist < 1000)
+		{
+			return;
+		}
 
 		this->q_table.clear();
-		//this->q_table.set_empty_key(SA());
-
-		while (!que.empty())
+		auto ins_func = [&](const SAQ &x)
 		{
-			auto item = que.top();
-			auto rate = abs(item.second) / abs_sum;
+			this->q_table.insert(x);
+		};
 
-			if (rate < threshold)
-			{
-				return;
-			}
-
-			this->q_table.insert(item);
-			que.pop();
-		}
+		for_each(itr, end(data_list), ins_func);
 	}
 
 public:
@@ -137,7 +149,7 @@ public:
 	QLClass(const double &lr, const double &r, const double &e)
 		:learn_rate(lr), r(r), e(e) 
 	{
-		this->q_table.set_empty_key(SA((S)nan,(A)nan));
+		this->q_table.set_empty_key(SA(NAN,NAN));
 	}
 
 	~QLClass() {}
@@ -182,6 +194,7 @@ public:
 		auto maxQ = this->q_table[make_pair(s, best_a)]; 
 
 		vector<SA> sas;
+		//vector<pair<const S&, const A&>>sas;
 		sas.reserve(size(pos_a));
 	
 		for (auto &a : pos_a)
@@ -189,10 +202,23 @@ public:
 			sas.push_back(make_pair(s, a));
 		}
 		
+		auto NotFound = [&](const SA &sa)
+		{
+			auto itr = this->q_table.find(sa);
+			auto ret = itr == end(this->q_table);
+
+			return ret;
+		};
+
 		for (auto &sa : sas)
 		{
-			auto q = this->q_table[sa];
-			if (q > maxQ)
+			auto itr = this->q_table.find(sa);
+			if (itr==end(this->q_table))
+			{
+				continue;
+			}
+			auto q = itr->second;
+			if ( q> maxQ)
 			{
 				best_a = sa.second;
 				maxQ = q;
@@ -308,5 +334,14 @@ public:
 		bool operator()(const std::pair<std::pair<S,A>,double> &x, const std::pair<std::pair<S, A>, double> &y) const
 		{
 			return x.second < y.second;
+		}
+	};
+
+	template<typename S, typename A>
+	struct std::greater<std::pair<std::pair<S, A>, double>>
+	{
+		bool operator()(const std::pair<std::pair<S, A>, double> &x, const std::pair<std::pair<S, A>, double> &y) const
+		{
+			return x.second > y.second;
 		}
 	};
