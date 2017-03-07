@@ -24,6 +24,13 @@
 #include<sparsehash/dense_hash_map>
 using namespace std;
 
+
+//Q学習を行うクラス
+//
+//QLClass(const double &lr, const double &r, const double &e)
+//lr=学習率
+//r=割引率
+//e=ランダムに手を打つ確率
 template<typename S,typename A>
 class QLClass :public Randomer,DataBase<vector<S>>
 {
@@ -58,8 +65,6 @@ public:
 	using FuncWrite = function<void(const QTable&,vector<vector<wstring>>*)>;
 #endif // !UNICODE
 	
-	
-
 protected:
 	QTable q_table;
 	
@@ -76,7 +81,6 @@ protected:
 	double learn_rate;
 	double r;
 	double e;
-
 
 	A RandAction(const S &s)
 	{
@@ -142,10 +146,14 @@ protected:
 	}
 
 public:
+	//学習率0.7、割引率0.9、ランダムに手を打つ確率0.4
 	QLClass()
-		:QLClass(0.7, 0.9, 1.)
+		:QLClass(0.7, 0.9, 0.4)
 	{}
 
+	//lr=学習率
+	//r=割引率
+	//e=ランダムに手を打つ確率
 	QLClass(const double &lr, const double &r, const double &e)
 		:learn_rate(lr), r(r), e(e) 
 	{
