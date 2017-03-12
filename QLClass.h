@@ -117,6 +117,28 @@ protected:
 			return;
 		}
 
+		{
+			uniform_real_distribution<> prop;
+			auto pred = [&](const SAQ &x)
+			{
+				auto rate = x.second / abs_sum;
+				if (prop(this->mt) > rate)
+				{
+					return true;
+				}
+				return false;
+			};
+
+			data_list.erase(remove_if(begin(data_list), end(data_list), pred), end(data_list));
+			this->q_table.clear();
+			auto ins_func = [&](const SAQ &x)
+			{
+				this->q_table.insert(x);
+			};
+
+			for_each(begin(data_list), end(data_list), ins_func);
+		}
+
 		auto threshold = 0.01;
 		auto pred = [](const SAQ &x, const SAQ &y)
 		{
