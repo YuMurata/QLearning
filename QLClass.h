@@ -137,6 +137,7 @@ protected:
 			};
 
 			for_each(begin(data_list), end(data_list), ins_func);
+			return;
 		}
 
 		auto threshold = 0.01;
@@ -224,7 +225,6 @@ public:
 		auto maxQ = this->q_table[make_pair(s, best_a)]; 
 
 		vector<SA> sas;
-		//vector<pair<const S&, const A&>>sas;
 		sas.reserve(size(pos_a));
 	
 		for (auto &a : pos_a)
