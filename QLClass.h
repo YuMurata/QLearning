@@ -98,7 +98,7 @@ protected:
 		auto _size = size(this->q_table);
 		auto _sizeof=sizeof(SA);
 		auto mem_size = _size*_sizeof;
-		if ( mem_size< 50e3)
+		if ( mem_size< 50e4)
 		{
 			return;
 		}
@@ -122,7 +122,7 @@ protected:
 			auto pred = [&](const SAQ &x)
 			{
 				auto rate = x.second / abs_sum;
-				if (prop(this->mt) > rate)
+				if (prop(this->mt) >= rate)
 				{
 					return true;
 				}
