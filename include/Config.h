@@ -3,10 +3,28 @@
 #include<vector>
 #include<utility>
 
-template<typename S,typename A>
+//$$$$Config
+//コンフィグクラス
+//必要なusing型を設定します
+//特にいじる必要なし
+//
+//####using型
+//Q = double
+//R = double
+//QA = std::pair<Q, A>
+//QAList = std::vector<QA>
+//As = std::vector<A>
+//
+//####コンストラクタ
+//なし
+//
+//####純粋仮想関数
+//なし
+template<typename A>
 struct Config
 {
 	using Q = double;
+	using R = double;
 
 	using QA = std::pair<Q, A>;
 	using QAList = std::vector<QA>;

@@ -1,5 +1,14 @@
 #pragma once
 
+#include<memory>
+#include"Transition.h"
+#include"Reward.h"
+
+//$$$$Environment
+//環境クラス
+//状態の遷移と報酬の付与を行います
+//コンストラクタに初期状態とTBaseの派生クラスとRBaseの派生クラスを渡してください
+//
 //####using型
 //R = double
 //pTransition = std::unique_ptr<TBase>
@@ -15,36 +24,7 @@ template<typename S,typename A>
 class Environment
 {
 public:
-	using R = double;
-
-	//####using型
-	//なし
-	//
-	//####コンストラクタ
-	//なし
-	//
-	//####純粋仮想関数
-	//S Value(const S &s,const A &a)
-	struct TBase
-	{
-		virtual S Value(const S &s,const A &a) = 0;
-	};
-
 	using pTransition = std::unique_ptr<TBase>;
-
-	//####using型
-	//なし
-	//
-	//####コンストラクタ
-	//なし
-	//
-	//####純粋仮想関数
-	//R Value(const S &s)
-	struct RBase
-	{
-		virtual R Value(const S &s) = 0;
-	};
-
 	using pReward = std::unique_ptr<RBase>;
 
 private:
@@ -58,10 +38,10 @@ public:
 
 	void Transition(const A &a)
 	{
-		this->s = this->t->Value(this->s,a);
+		this->s = this->t->Value(this->s, a);
 	}
 
-	R Reward()
+	Config::R Reward()
 	{
 		auto ret = this->r->Value(this->s);
 		return ret;

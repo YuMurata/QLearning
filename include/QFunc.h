@@ -2,8 +2,12 @@
 
 #include"Config.h"
 
+//$$$$QBase
+//Q関数の基底クラス
+//このクラスを継承した派生クラスを作成してください
+//
 //####using型
-//Q = double;
+//なし
 //
 //####コンストラクタ
 //なし
@@ -13,14 +17,17 @@
 //Q operator()(const S &s, const A &a)
 //void Disp()
 template<typename S,typename A>
-struct QBase:public Config<S,A>
+struct QBase :public Config<S>
 {
 	//状態sにおいて行動aをとる価値qを報酬rと最大行動価値maxQを使って更新する
+	//TODO: 派生クラスでユーザーが定義する
 	virtual void UpDate(const S &s, const A &a, const double &r, const Q &maxQ) = 0;
 
 	//状態sにおいて行動aをとる価値qを返す
+	//TODO: 派生クラスでユーザーが定義する
 	virtual Q Value(const S &s, const A &a) = 0;
 
+	//Q値と行動のpair型のvectorを返す
 	QAList ValueList(const S &s, const As &pos_a)
 	{
 		using namespace std;
@@ -38,5 +45,6 @@ struct QBase:public Config<S,A>
 	}
 
 	//Q値を表示する
+	//TODO: 派生クラスでユーザーが定義する
 	virtual void Disp() = 0;
 };

@@ -1,9 +1,14 @@
 #pragma once
 
+#include<algorithm>
 #include"Config.h"
 
+//$$$$ABase
+//行動の基底クラス
+//このクラスを継承した派生クラスを作成してください
+//
 //####using型
-//As = std::vector<A>;
+//なし
 //
 //####コンストラクタ
 //なし
@@ -12,12 +17,14 @@
 //virtual As Capabilities(const S &s)
 //virtual A SelectAction(const S &s)
 template<typename S,typename A>
-struct ABase:public Config<S,A>
+struct ABase :public Config<A>
 {
 	//可能な行動を返す
+	//TODO: 派生クラスでユーザーが定義する
 	virtual As Capabilities(const S &s) = 0;
 
 	//任意の行動を返す
+	//TODO: 派生クラスでユーザーが定義する
 	virtual A SelectAction(const S &s, const QAList &qa_list) = 0;
 
 	//最もQ値の高い行動を返す
