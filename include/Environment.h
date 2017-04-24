@@ -24,8 +24,8 @@ template<typename S,typename A>
 class Environment
 {
 public:
-	using pTransition = std::unique_ptr<TBase>;
-	using pReward = std::unique_ptr<RBase>;
+	using pTransition = std::unique_ptr<TBase<S, A>>;
+	using pReward = std::unique_ptr<RBase<S, A>>;
 
 private:
 	S s;

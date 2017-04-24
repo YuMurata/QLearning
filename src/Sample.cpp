@@ -11,37 +11,54 @@
 
 using namespace std;
 
+//迷路問題を解く
+//行動は上下左右{-4,4,-1,1}の4通り
+//状態は0～10の11通り
+//   0, 1, 2,
+//3, 4, 5, 6, 7,
+//   8, 9, 10,
+//
+//5がスタート、3,7がゴール
+//報酬は
+//3=-10、7=-10
+//他は-1
+//
 int main()
 {
+	//SとAの設定
 	using S = int;
 	using A = int;
-	
-	enum ACT
-	{
-		UP,
-		LEFT,
-		DOWN,
-		RIGHT,
-	};
 
-	struct QTable :public QBase<S,A>
+	//行動の設定
+	enum ACT
+			{
+				UP,
+				LEFT,
+				DOWN,
+				RIGHT,
+			};
+
+	//QTableの定義
+	//今回はstd::mapを使う
+	struct QTable :public QBase<S, A>
 	{
 		using SA = std::pair<S, A>;
 
-		map<SA,Config<S,A>::Q> table;
-		void UpDate(const S &s, const A &a,const double &r,const Q &maxQ)override
+		map<SA, Q> table;
+		void UpDate(const S &s, const A &a, const double &r, const Q &maxQ)override
 		{
 			auto learn_rate = 0.5;
 			auto discount = 0.8;
 			auto key = make_pair(s, a);
 			auto &q = this->table[key];
 
-			q=(1 - learn_rate)*q + learn_rate*(r + discount*maxQ);
+			q = (1 - learn_rate)*q + learn_rate*(r + discount*maxQ);
 		}
 
 		Q Value(const S &s, const A &a)override
 		{
-			auto ret = this->table[make_pair(s, a)];
+			auto key = make_pair(s, a);
+			auto ret = this->table[key];
 			return ret;
 		}
 
@@ -50,7 +67,7 @@ int main()
 			for (auto &i : this->table)
 			{
 				auto sa = i.first;
-				
+
 				auto s = sa.first;
 				auto a = sa.second;
 				auto q = i.second;
@@ -65,8 +82,10 @@ int main()
 			}
 		}
 	};
-	
-	struct Exprole :public ABase<S,A>
+
+	//Exproleの定義
+	//今回はε-greedy法を使う
+	struct Exprole :public ABase<S, A>
 	{
 	public:
 		As Capabilities(const S &s)
@@ -75,15 +94,15 @@ int main()
 			return ret;
 		}
 
-		A SelectAction(const S &s, const Config<S,A>::QAList &qa_list)override
+		A SelectAction(const S &s, const QAList &qa_list)override
 		{
 			auto e = 0.5;
 			static random_device rnd;
 			static mt19937 mt(rnd());
 			static uniform_real_distribution<> obj(0, 1);
-			
+
 			auto x = obj(mt);
-			if ( x< e)
+			if (x < e)
 			{
 				auto ret = this->BestAction(s, qa_list);
 				return ret;
@@ -99,9 +118,11 @@ int main()
 		}
 	};
 
-	struct Maze :public Environment<S, A>::TBase
+	//Mazeの定義
+	//上下左右に遷移する
+	struct Maze :public TBase<S, A>
 	{
-		S Value(const S &s,const A &a)override
+		S Value(const S &s, const A &a)override
 		{
 			const vector<S> s_list =
 			{
@@ -131,11 +152,13 @@ int main()
 		}
 	};
 
-	struct Faster :public Environment<S, A>::RBase
+	//Fasterの定義
+	//状態によって報酬を付与する
+	struct Faster :public RBase<S, A>
 	{
-		Environment<S, A>::R Value(const S &s)
+		R Value(const S &s)
 		{
-			Environment<S, A>::R ret;
+			R ret;
 
 			if (s == 3)
 			{
@@ -152,9 +175,10 @@ int main()
 
 			return ret;
 		}
-
 	};
-	
+
+	//QLクラス
+	//一定回数学習を行う
 	struct QL
 	{
 		Agent<S, A> agent;
@@ -168,24 +192,24 @@ int main()
 			Environment<S, A>::pTransition &t,
 			Agent<S, A>::pQFunc &q_func
 		)
-			:agent(s0,a, q_func), environment(s0, t, r) {}
+			:agent(s0, a, q_func), environment(s0, t, r) {}
 
 		void Learn(const int &learn_num)
 		{
 			S s;
 			A a;
-			Environment<S, A>::R r;
+			Config<S>::R r;
 
-				s = environment.Get();
-				agent.Observe(s);
+			s = environment.Get();//状態の取得
+			agent.Observe(s);//観測
 			for (int i = 0; i < learn_num; ++i)
 			{
-				a = agent.Action();
-				environment.Transition(a);
-				s = environment.Get();
-				agent.Observe(s);
-				r = environment.Reward();
-				agent.Review(r);
+				a = agent.Action();//行動
+				environment.Transition(a);//遷移
+				s = environment.Get();//状態の取得
+				agent.Observe(s);//観測
+				r = environment.Reward();//報酬
+				agent.Review(r);//学習
 			}
 		}
 
@@ -195,27 +219,20 @@ int main()
 		}
 	};
 
-	const vector<A> a_list =
-	{
-		UP,LEFT,DOWN,RIGHT,
-	};
-
 	using Agent = Agent<S, A>;
 	using Env = Environment<S, A>;
 
-	auto s0 = 5;
+	auto s0 = 5;//初期状態
 	Agent::pAction exp = make_unique<Exprole>();
 	Env::pReward fast = make_unique<Faster>();
 	Env::pTransition maze = make_unique<Maze>();
 	Agent::pQFunc table = make_unique<QTable>();
 
-	QL obj(s0,exp,fast,maze,table);
+	QL obj(s0, exp, fast, maze, table);
 	obj.Learn(1000);
-
-
 
 	obj.Disp();
 	_getch();
-    return 0;
+	return 0;
 }
 
