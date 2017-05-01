@@ -4,6 +4,8 @@
 #include"../include/Agent.h"
 #include"../include/Environment.h"
 
+#include"../include/QLearningTemplate.h"
+
 #include<map>
 #include<random>
 #include<iostream>
@@ -122,7 +124,7 @@ int main()
 	//ã‰º¶‰E‚É‘JˆÚ‚·‚é
 	struct Maze :public TBase<S, A>
 	{
-		S Value(const S &s, const A &a)override
+		S Transition(const S &s, const A &a)override
 		{
 			const vector<S> s_list =
 			{
@@ -156,7 +158,7 @@ int main()
 	//ó‘Ô‚É‚æ‚Á‚Ä•ñV‚ğ•t—^‚·‚é
 	struct Faster :public RBase<S, A>
 	{
-		R Value(const S &s)
+		R Reward(const S &s)override
 		{
 			R ret;
 
@@ -228,7 +230,7 @@ int main()
 	Env::pTransition maze = make_unique<Maze>();
 	Agent::pQFunc table = make_unique<QTable>();
 
-	QL obj(s0, exp, fast, maze, table);
+	QLearningTemplate<S,A> obj(s0, exp, fast, maze, table);
 	obj.Learn(1000);
 
 	obj.Disp();

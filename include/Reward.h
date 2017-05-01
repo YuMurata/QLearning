@@ -12,11 +12,11 @@
 //なし
 //
 //####純粋仮想関数
-//R Value(const S &s)
+//R Reward(const S &s)
 template<typename S,typename A>
-struct RBase :public Config<S>
+struct RBase :public Config<A>
 {
 	//状態sにおける報酬を返す
 	//TODO: 派生クラスでユーザーが定義する
-	virtual R Value(const S &s) = 0;
+	virtual R Reward(const S &s) = 0;
 };

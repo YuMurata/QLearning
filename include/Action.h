@@ -15,7 +15,7 @@
 //
 //####ƒˆ‰¼‘zŠÖ”
 //virtual As Capabilities(const S &s)
-//virtual A SelectAction(const S &s)
+//virtual A SelectAction(const S &s, const QAList &qa_list)
 template<typename S,typename A>
 struct ABase :public Config<A>
 {
