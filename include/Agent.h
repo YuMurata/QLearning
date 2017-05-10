@@ -39,6 +39,9 @@ public:
 	Agent(const S &s0, pAction &a, pQFunc &q_func)
 		:new_s(s0), old_s(s0), q_func(move(q_func)), action(move(a)) {}
 
+	Agent(const S &s0, pAction &&a, pQFunc &&q_func)
+		:new_s(s0), old_s(s0), q_func(move(q_func)), action(move(a)) {}
+
 	//ó‘Ôs‚ğŠÏ‘ª‚·‚é
 	void Observe(const S &s)
 	{
