@@ -34,6 +34,9 @@ public:
 	Environment(const S &s0, pTransition &t, pReward &r)
 		:s(s0), t(move(t)), r(move(r)) {}
 
+	Environment(const S &s0, pTransition &&t, pReward &&r)
+		:s(s0), t(move(t)), r(move(r)) {}
+
 	void Transition(const A &a)
 	{
 		this->s = this->t->Transition(this->s, a);
