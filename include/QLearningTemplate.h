@@ -43,6 +43,16 @@ public:
 	)
 		:agent(s0, a, q_func), environment(s0, t, r) {}
 
+	QLearningTemplate
+	(
+		const S &s0,
+		typename Agent<S, A>::pAction &&a,
+		typename Environment<S, A>::pReward &&r,
+		typename Environment<S, A>::pTransition &&t,
+		typename Agent<S, A>::pQFunc &&q_func
+	)
+		:agent(s0, a, q_func), environment(s0, t, r) {}
+
 	//learn_num‰ñŠwK‚ğs‚¤
 	void Learn(const int &learn_num)
 	{
