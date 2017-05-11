@@ -13,6 +13,8 @@
 //A = template
 //Q = double
 //R = double
+//SA = std::pair<S, A>
+//SAQ = std::pair<SA, Q>
 //QA = std::pair<Q, A>
 //QAList = std::vector<QA>
 //As = std::vector<A>
@@ -30,6 +32,9 @@ struct Config
 
 	using Q = double;
 	using R = double;
+
+	using SA = std::pair<S, A>;
+	using SAQ = std::pair<SA, Q>;
 
 	using QA = std::pair<Q, A>;
 	using QAList = std::vector<QA>;
