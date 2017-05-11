@@ -19,7 +19,7 @@
 //####ƒˆ‰¼‘zŠÖ”
 //‚È‚µ
 template<typename S,typename A>
-class Environment
+class Environment:public Config<S,A>
 {
 public:
 	using pTransition = std::unique_ptr<TBase<S, A>>;
@@ -42,7 +42,7 @@ public:
 		this->s = this->t->Transition(this->s, a);
 	}
 
-	typename Config<S,A>::R Reward()
+	typename R Reward()
 	{
 		auto ret = this->r->Reward(this->s);
 		return ret;

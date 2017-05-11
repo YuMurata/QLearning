@@ -20,7 +20,7 @@
 //####純粋仮想関数
 //なし
 template<typename S,typename A>
-class Agent
+class Agent :public Config<S,A>
 {
 public:
 	using pQFunc = std::unique_ptr<QBase<S, A>>;
@@ -59,7 +59,7 @@ public:
 	}
 
 	//Q値を更新する
-	void Review(const typename Config<S,A>::R &r)
+	void Review(const typename R &r)
 	{
 		auto pos_a = this->action->Capabilities(this->new_s);
 		auto qa_list = this->q_func->ValueList(this->new_s, pos_a);

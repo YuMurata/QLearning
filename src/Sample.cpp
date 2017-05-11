@@ -179,48 +179,6 @@ int main()
 		}
 	};
 
-	//QLƒNƒ‰ƒX
-	//ˆê’è‰ñ”ŠwK‚ğs‚¤
-	struct QL
-	{
-		Agent<S, A> agent;
-		Environment<S, A> environment;
-
-		QL
-		(
-			const int &s0,
-			Agent<S, A>::pAction &a,
-			Environment<S, A>::pReward &r,
-			Environment<S, A>::pTransition &t,
-			Agent<S, A>::pQFunc &q_func
-		)
-			:agent(s0, a, q_func), environment(s0, t, r) {}
-
-		void Learn(const int &learn_num)
-		{
-			S s;
-			A a;
-			Config<S>::R r;
-
-			s = environment.Get();//ó‘Ô‚Ìæ“¾
-			agent.Observe(s);//ŠÏ‘ª
-			for (int i = 0; i < learn_num; ++i)
-			{
-				a = agent.Action();//s“®
-				environment.Transition(a);//‘JˆÚ
-				s = environment.Get();//ó‘Ô‚Ìæ“¾
-				agent.Observe(s);//ŠÏ‘ª
-				r = environment.Reward();//•ñV
-				agent.Review(r);//ŠwK
-			}
-		}
-
-		void Disp()
-		{
-			this->agent.QDisp();
-		}
-	};
-
 	using Agent = Agent<S, A>;
 	using Env = Environment<S, A>;
 

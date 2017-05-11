@@ -26,7 +26,7 @@
 //####ƒˆ‰¼‘zŠÖ”
 //‚È‚µ
 template<typename S,typename A>
-class QLearningTemplate
+class QLearningTemplate:public Config<S,A>
 {
 private:
 	Agent<S, A> agent;
@@ -58,7 +58,7 @@ public:
 	{
 		S s;
 		A a;
-		Config<S>::R r;
+		R r;
 
 		s = environment.Get();//ó‘Ô‚Ìæ“¾
 		agent.Observe(s);//ŠÏ‘ª
