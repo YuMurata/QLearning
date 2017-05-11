@@ -17,7 +17,7 @@
 //virtual As Capabilities(const S &s)
 //virtual A SelectAction(const S &s, const QAList &qa_list)
 template<typename S,typename A>
-struct ABase :public Config<A>
+struct ABase :public Config<S,A>
 {
 	//可能な行動を返す
 	//TODO: 派生クラスでユーザーが定義する

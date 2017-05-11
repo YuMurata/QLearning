@@ -59,7 +59,7 @@ public:
 	}
 
 	//Q’l‚ğXV‚·‚é
-	void Review(const typename Config<A>::R &r)
+	void Review(const typename Config<S,A>::R &r)
 	{
 		auto pos_a = this->action->Capabilities(this->new_s);
 		auto qa_list = this->q_func->ValueList(this->new_s, pos_a);

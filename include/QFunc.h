@@ -17,7 +17,7 @@
 //Q Value(const S &s, const A &a)
 //void Disp()
 template<typename S,typename A>
-struct QBase :public Config<A>
+struct QBase :public Config<S,A>
 {
 	//状態sにおいて行動aをとる価値qを報酬rと最大行動価値maxQを使って更新する
 	//TODO: 派生クラスでユーザーが定義する

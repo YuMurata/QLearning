@@ -42,7 +42,7 @@ public:
 		this->s = this->t->Transition(this->s, a);
 	}
 
-	typename Config<A>::R Reward()
+	typename Config<S,A>::R Reward()
 	{
 		auto ret = this->r->Reward(this->s);
 		return ret;

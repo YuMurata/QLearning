@@ -9,6 +9,8 @@
 //“Á‚É‚¢‚¶‚é•K—v‚È‚µ
 //
 //####usingŒ^
+//S = template
+//A = template
 //Q = double
 //R = double
 //QA = std::pair<Q, A>
@@ -20,9 +22,12 @@
 //
 //####ƒˆ‰¼‘zŠÖ”
 //‚È‚µ
-template<typename A>
+template<typename _S,typename _A>
 struct Config
 {
+	using S = _S;
+	using A = _A;
+
 	using Q = double;
 	using R = double;
 
