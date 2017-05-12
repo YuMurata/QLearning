@@ -36,11 +36,33 @@ protected:
 	A a;
 
 public:
+	Agent() {}
+
 	Agent(const S &s0, pAction &a, pQFunc &q_func)
 		:new_s(s0), old_s(s0), q_func(move(q_func)), action(move(a)) {}
 
 	Agent(const S &s0, pAction &&a, pQFunc &&q_func)
 		:new_s(s0), old_s(s0), q_func(move(q_func)), action(move(a)) {}
+
+	//初期化する
+	//コンストラクタで初期化しなかった場合用
+	void Init(const S &s0, pAction &a, pQFunc &q_func)
+	{
+		this->new_s = s0;
+		this->old_s = s0;
+		this->q_func = move(q);
+		this->action = move(a);
+	}
+
+	//初期化する
+	//コンストラクタで初期化しなかった場合用
+	void Init(const S &s0, pAction &&a, pQFunc &&q_func)
+	{
+		this->new_s = s0;
+		this->old_s = s0;
+		this->q_func = move(q);
+		this->action = move(a);
+	}
 
 	//状態sを観測する
 	void Observe(const S &s)

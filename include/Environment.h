@@ -31,11 +31,31 @@ private:
 	pReward r;
 
 public:
+	Environment() {}
+
 	Environment(const S &s0, pTransition &t, pReward &r)
 		:s(s0), t(move(t)), r(move(r)) {}
 
 	Environment(const S &s0, pTransition &&t, pReward &&r)
 		:s(s0), t(move(t)), r(move(r)) {}
+
+	//初期化する
+	//コンストラクタで初期化しなかった場合用
+	void Init(const S &s0, pTransition &t, pReward &r)
+	{
+		this->s = s0;
+		this->t = move(t);
+		this->r = move(r);
+	}
+
+	//初期化する
+	//コンストラクタで初期化しなかった場合用
+	void Init(const S &s0, pTransition &&t, pReward &&r)
+	{
+		this->s = s0;
+		this->t = move(t);
+		this->r = move(r);
+	}
 
 	void Transition(const A &a)
 	{

@@ -33,6 +33,8 @@ private:
 	Environment<S, A> environment;
 
 public:
+	QLearningTemplate() {}
+
 	QLearningTemplate
 	(
 		const S &s0,
@@ -52,6 +54,37 @@ public:
 		typename Agent<S, A>::pQFunc &&q_func
 	)
 		:agent(s0, a, q_func), environment(s0, t, r) {}
+
+	//初期化する
+	//コンストラクタで初期化しなかった場合用
+	void Init
+	(
+		const S &s0,
+		typename Agent<S, A>::pAction &a,
+		typename Environment<S, A>::pReward &r,
+		typename Environment<S, A>::pTransition &t,
+		typename Agent<S, A>::pQFunc &q_func
+	)
+	{
+		this->agent.Init(s0, a, q_func);
+		this->environment.Init(s0, t, r);
+	}
+
+
+	//初期化する
+	//コンストラクタで初期化しなかった場合用
+	void Init
+	(
+		const S &s0,
+		typename Agent<S, A>::pAction &&a,
+		typename Environment<S, A>::pReward &&r,
+		typename Environment<S, A>::pTransition &&t,
+		typename Agent<S, A>::pQFunc &&q_func
+	)
+	{
+		this->agent.Init(s0, a, q_func);
+		this->environment.Init(s0, t, r);
+	}
 
 	//learn_num回学習を行う
 	void Learn(const int &learn_num)
