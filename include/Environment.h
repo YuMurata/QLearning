@@ -57,19 +57,28 @@ public:
 		this->r = move(r);
 	}
 
+	//s“®a‚É‚æ‚Á‚Äó‘Ôs‚ð‘JˆÚ‚³‚¹‚é
 	void Transition(const A &a)
 	{
 		this->s = this->t->Transition(this->s, a);
 	}
 
+	//•ñV‚ð•Ô‚·
 	typename R Reward()
 	{
 		auto ret = this->r->Reward(this->s);
 		return ret;
 	}
 
+	//ó‘Ô‚ð•Ô‚·
 	S Get()
 	{
 		return this->s;
+	}
+
+	//ó‘Ôs‚ðƒZƒbƒg‚·‚é
+	void Set(const S &s)
+	{
+		this->s = s;
 	}
 };
