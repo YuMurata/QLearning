@@ -12,6 +12,10 @@
 //####コンストラクタ
 //なし
 //
+//####仮想関数
+//void Save(const char file_name[])	
+//void Load(const char file_name[])
+//
 //####純粋仮想関数
 //void UpDate(const S &s, const A &a,const R &r,const Q &maxQ)
 //Q Value(const S &s, const A &a)
@@ -47,4 +51,10 @@ struct QBase :public Config<S,A>
 	//Q値を表示する
 	//TODO: 派生クラスでユーザーが定義する
 	virtual void Disp() = 0;
+
+	//Q値の保存
+	virtual void Save(const char file_name[]) {}
+	
+	//Q値の読み出し
+	virtual void Load(const char file_name[]) {}
 };
