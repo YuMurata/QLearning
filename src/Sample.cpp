@@ -11,6 +11,8 @@
 #include<iostream>
 #include<conio.h>
 #include<string>
+#include<fstream>
+#include<sstream>
 
 using namespace std;
 
@@ -83,6 +85,64 @@ int main()
 
 				cout << endl;
 			}
+		}
+
+		bool Save(const char file_name[])override
+		{
+			ofstream ofs(file_name);
+
+			if (!ofs)
+			{
+				return false;
+			}
+			else
+			{
+				for (auto &i : this->table)
+				{
+					auto sa = i.first;
+
+					auto s = sa.first;
+					auto a = sa.second;
+					auto q = i.second;
+
+					ofs << s << "," << a << "," << q << endl;
+				}
+			}
+
+			return true;
+		}
+
+		bool Load(const char file_name[])override
+		{
+			ifstream ifs(file_name);
+			
+			if (!ifs)
+			{
+				return false;
+			}
+			else
+			{
+				string line;
+				while (getline(ifs, line))
+				{
+					stringstream stream(line);
+					string word;
+					vector<string> item;
+					while (getline(stream, word, ','))
+					{
+						item.push_back(word);
+					}
+
+					auto s = stoi(item[0]);
+					auto a = stoi(item[1]);
+					auto q = stod(item[2]);
+
+					auto sa = make_pair(s, a);
+					this->table[sa] = q;
+				}
+			}
+
+			return true;
 		}
 	};
 
@@ -190,9 +250,28 @@ int main()
 	Agent::pQFunc table = make_unique<QTable>();
 
 	QLearningTemplate<S,A> obj(s0, exp, fast, maze, table);
-	obj.Learn(1000);
+	
+	if (obj.Load("test.txt"))
+	{
+		cout << "Load Succces" << endl;
+	}
+	else
+	{
+		cout << "Load Failled" << endl;
+	}
 
+	obj.Learn(1000);
 	obj.Disp();
+
+	if(obj.Save("test.txt"))
+	{
+		cout << "Save Succces" << endl;
+	}
+	else
+	{
+		cout << "Save Failled" << endl;
+	}
+
 	_getch();
 	return 0;
 }

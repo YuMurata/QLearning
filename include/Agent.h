@@ -26,7 +26,7 @@ public:
 	using pQFunc = std::unique_ptr<QBase<S, A>>;
 	using pAction = std::unique_ptr<ABase<S, A>>;
 
-protected:
+private:
 	pQFunc q_func;
 	pAction action;
 
@@ -94,5 +94,15 @@ public:
 	void QDisp()
 	{
 		this->q_func->Disp();
+	}
+
+	bool Save(const char file_name[])const
+	{
+		return this->q_func->Save(file_name);
+	}
+
+	bool Load(const char file_name[])const
+	{
+		return this->q_func->Load(file_name);
 	}
 };

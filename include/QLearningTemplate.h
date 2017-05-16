@@ -111,4 +111,14 @@ public:
 	{
 		this->agent.QDisp();
 	}
+
+	bool Save(const char file_name[])
+	{
+		return this->agent.Save(file_name);
+	}
+
+	bool Load(const char file_name[])
+	{
+		return this->agent.Load(file_name);
+	}
 };

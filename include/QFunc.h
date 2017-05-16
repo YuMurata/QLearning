@@ -13,8 +13,8 @@
 //なし
 //
 //####仮想関数
-//void Save(const char file_name[])	
-//void Load(const char file_name[])
+//bool Save(const char file_name[])	
+//bool Load(const char file_name[])
 //
 //####純粋仮想関数
 //void UpDate(const S &s, const A &a,const R &r,const Q &maxQ)
@@ -53,8 +53,14 @@ struct QBase :public Config<S,A>
 	virtual void Disp() = 0;
 
 	//Q値の保存
-	virtual void Save(const char file_name[]) {}
+	virtual bool Save(const char file_name[]) 
+	{
+		return false;
+	}
 	
 	//Q値の読み出し
-	virtual void Load(const char file_name[]) {}
+	virtual bool Load(const char file_name[])
+	{
+		return false;
+	}
 };
