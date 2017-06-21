@@ -66,7 +66,13 @@ public:
 	//•ñV‚ğ•Ô‚·
 	typename R Reward()
 	{
-		auto ret = this->r->Reward(this->s);
+		return this->Reward(this->s);
+	}
+
+	//ó‘Ôs‚É‘Î‚·‚é•ñV‚ğ•Ô‚·
+	typename R Reward(const S &s)
+	{
+		auto ret = this->r->Reward(s);
 		return ret;
 	}
 
