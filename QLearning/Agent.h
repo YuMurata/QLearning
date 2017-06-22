@@ -90,6 +90,21 @@ public:
 		this->q_func->UpDate(this->old_s, this->a, r, maxQ);
 	}
 
+	//”CˆÓ‚Ì
+	//‘JˆÚ‘O‚Ìó‘Ôold_s
+	//s“®a
+	//‘JˆÚŒã‚Ìó‘Ônew_s
+	//•ñVr
+	//‚ð—p‚¢‚ÄQ’l‚ðXV‚·‚é
+	void Review(const typename S &old_s,const typename A &a,const typename S &new_s,const typename R &r)
+	{
+		auto pos_a = this->action->Capabilities(new_s);
+		auto qa_list = this->q_func->ValueList(new_s, pos_a);
+		auto best_a = this->action->BestAction(new_s, qa_list);
+		auto maxQ = this->q_func->Value(new_s, best_a);
+		this->q_func->UpDate(old_s, a, r, maxQ);
+	}
+
 	//Q’l‚ð•\Ž¦‚·‚é
 	void QDisp()
 	{
