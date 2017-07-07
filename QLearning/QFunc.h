@@ -63,4 +63,6 @@ struct QBase :public Config<S,A>
 	{
 		return false;
 	}
+
+	virtual void Extension() {}
 };

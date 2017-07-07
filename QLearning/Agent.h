@@ -120,4 +120,9 @@ public:
 	{
 		return this->q_func->Load(file_name);
 	}
+
+	void Extension()
+	{
+		this->q_func->Extension();
+	}
 };
