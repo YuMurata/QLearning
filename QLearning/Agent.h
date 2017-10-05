@@ -25,6 +25,7 @@ class Agent :public Config<S,A>
 public:
 	using pQFunc = std::unique_ptr<QBase<S, A>>;
 	using pAction = std::unique_ptr<ABase<S, A>>;
+	
 
 private:
 	pQFunc q_func;
@@ -105,6 +106,11 @@ public:
 		this->q_func->UpDate(old_s, a, r, maxQ);
 	}
 
+	void BatchReview(const std::vector<typename QBase<S,A>::Sampling> &samples,const int &batch_size)
+	{
+		this->q_func->BatchUpDate(samples,batch_size);
+	}
+
 	//Q’l‚ð•\Ž¦‚·‚é
 	void QDisp()
 	{
@@ -121,7 +127,7 @@ public:
 		return this->q_func->Load(file_name);
 	}
 
-	void Extension()
+	void Extension(void)
 	{
 		this->q_func->Extension();
 	}

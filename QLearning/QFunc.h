@@ -23,16 +23,29 @@
 template<typename S,typename A>
 struct QBase :public Config<S,A>
 {
+	struct Sampling
+	{
+		S current;
+		A action;
+		R reward;
+		S transition;
+
+		Sampling(S current, A action, R reward, S transition)
+			:current(current), action(action), reward(reward), transition(transition) {}
+	};
+
 	//状態sにおいて行動aをとる価値qを報酬rと最大行動価値maxQを使って更新する
 	//TODO: 派生クラスでユーザーが定義する
 	virtual void UpDate(const S &s, const A &a, const R &r, const Q &maxQ) = 0;
+
+	virtual void BatchUpDate(const std::vector<Sampling> &sample,const int &batch_size) {}
 
 	//状態sにおいて行動aをとる価値qを返す
 	//TODO: 派生クラスでユーザーが定義する
 	virtual Q Value(const S &s, const A &a) = 0;
 
 	//Q値と行動のpair型のvectorを返す
-	typename QAList ValueList(const S &s, const As &pos_a)
+	virtual typename QAList ValueList(const S &s, const As &pos_a)
 	{
 		using namespace std;
 
@@ -47,6 +60,8 @@ struct QBase :public Config<S,A>
 
 		return ret;
 	}
+
+	virtual Q MaxQ(const S &s) { return Q(); }
 
 	//Q値を表示する
 	//TODO: 派生クラスでユーザーが定義する
@@ -64,5 +79,5 @@ struct QBase :public Config<S,A>
 		return false;
 	}
 
-	virtual void Extension() {}
+	virtual void Extension(void) {}
 };
